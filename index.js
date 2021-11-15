@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const db = require('./db/connection');
+const { viewEmployees } = require('./utils/employees');
 
 const start = () => {
     inquirer.prompt([
@@ -158,7 +159,7 @@ const start = () => {
             }
         }
     ])
-    .then(answers => console.log(answers));
+    .then(({ action }) => viewEmployees());
 };
 
 start();
