@@ -1,6 +1,8 @@
 const inquirer = require('inquirer');
 const db = require('./db/connection');
-const { viewEmployees } = require('./utils/employees');
+const { viewEmployees, byDepartment, byManager, addEmployee, updateRole, updateManager, deleteEmployee } = require('./utils/employees');
+const { viewDepartments, addDepartment } = require('./utils/departments');
+const { viewRoles, addRole } = require('./utils/roles');
 
 const start = () => {
     inquirer.prompt([
@@ -9,7 +11,31 @@ const start = () => {
             name: 'action',
             message: 'What would you like to do?',
             choices: ['View All Employees', 'View Employees by Department', 'View Employees by Manager', 'Add Employee', 'Update Employee Role', 'Update Employee Manager', 'Delete Employee',
-            'View Departments', 'Add Department', 'View Roles', 'Add a Role']
+            'View Departments', 'Add a Department', 'View Roles', 'Add a Role']
+        },
+        {
+            type: 'list',
+            name: 'department',
+            message: 'Pick a department.',
+            choices: ['Engineering', 'Creative', 'Marketing', 'Finance'],
+            when: ({ action }) => {
+                if (action === 'View Employees by Department') {
+                    return true;
+                }
+                return false;
+            }
+        },
+        {
+            type: 'list',
+            name: 'manager',
+            message: 'Pick a manager.',
+            choices: ['Ali', 'Samantha', 'Dave', 'Tessa', 'None'],
+            when: ({ action }) => {
+                if (action === 'View Employees by Manager') {
+                    return true;
+                }
+                return false;
+            }
         },
         {
             type: 'input',
@@ -114,7 +140,7 @@ const start = () => {
         },
         {
             type: 'list',
-            name: 'deleteEmployee',
+            name: 'delete',
             choices: ['Ali Maqsood', 'Samantha Urwin', 'Dave Chappelle', 'Tessa Thompson', 'Ryan Reynolds', 'Marshall Mathers', 'Katherine Segal', 'Robyn Fenty', 'Regina King', 'Jimmy Yang', 'Idris Alba', 'Blake Lively'],
             when: ({ action }) => {
                 if (action === 'Delete Employee') {
@@ -128,7 +154,7 @@ const start = () => {
             name: 'addDepartment',
             message: 'What department would you like to add?',
             when: ({ action }) => {
-                if (action === 'Add Department') {
+                if (action === 'Add a Department') {
                     return true;
                 }
                 return false;
@@ -157,9 +183,68 @@ const start = () => {
                 }
                 return false;
             }
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'What is the salary? (without decimals)',
+            when: ({ addRole }) => {
+                if (!addRole) {
+                    return false;
+                }
+                return true;
+            }
+        },
+        {
+            type: 'list',
+            name: 'roleDepartment',
+            message: 'What department is this role under?',
+            choices: ['Engineering', 'Creative', 'Marketing', 'Finance'],
+            when: ({ salary }) => {
+                if (!salary) {
+                    return false;
+                }
+                return true;
+            }
         }
     ])
-    .then(({ action }) => viewEmployees());
+    .then(({ action, ...info }) => {
+        switch (action) {
+            case 'View All Employees':
+                viewEmployees();
+                break;
+            case 'View Employees by Department':
+                byDepartment(info);
+                break;
+            case 'View Employees by Manager':
+                byManager(info);
+                break;
+            case 'Add Employee':
+                addEmployee(info);
+                break;
+            case 'Update Employee Role':
+                updateRole(info);
+                break;
+            case 'Update Employee Manager':
+                updateManager(info);
+                break;
+            case 'Delete Employee':
+                deleteEmployee(info);
+                break;
+            case 'View Departments':
+                viewDepartments();
+                break;
+            case 'Add a Department':
+                addDepartment(info);
+                break;
+            case 'View Roles':
+                viewRoles();
+                break;
+            case 'Add a Role':
+                addRole(info);
+                break;
+        }
+    });
 };
 
 start();
