@@ -6,14 +6,12 @@ const viewRoles = () => {
     FROM roles
     LEFT JOIN departments ON department_id = departments.id`;
 
-    db.query(sql, (err, rows) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
+    return db.query(sql)
+    .then(results => {
+        [rows] = results;
         console.table(rows);
-        return;
-    });
+    })
+    .catch(console.log);
 };
 
 const addRole = (info) => {
@@ -28,14 +26,9 @@ const addRole = (info) => {
     VALUES (?,?,?)`;
     const params = [role, salary, department_id];
 
-    db.query(sql, params,(err, rows) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        console.log('Role Added!');
-        return;
-    });
+    return db.query(sql, params)
+    .then(console.log('Role Added!'))
+    .catch(console.log);
 };
 
 module.exports = { viewRoles, addRole };

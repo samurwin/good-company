@@ -1,5 +1,6 @@
 const db = require('../db/connection');
 const Ctable = require('console.table');
+const { employeeList, departmentList, roleList } = require('./list');
 
 // list all employees
 const viewEmployees = () => {
@@ -8,14 +9,12 @@ const viewEmployees = () => {
     LEFT JOIN roles ON roles.id = e.role_id
     LEFT JOIN employees m ON m.id = e.manager_id;`
 
-    db.query(sql, (err, rows) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
+    return db.query(sql)
+    .then(results => {
+        [rows] = results;
         console.table(rows);
-        return;
     })
+    .catch(console.log);
 };
 
 // list employees by department
@@ -43,14 +42,12 @@ const byDepartment = (info) => {
     LEFT JOIN employees m ON m.id = e.manager_id
     WHERE roles.department_id = ?`
 
-    db.query(sql, id, (err, rows) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        console.table(rows);
-        return;
-    });
+    return db.query(sql, id)
+    .then(results => {
+        [rows] = results;
+        console.table(rows)
+    })
+    .catch(console.log);
 };
 
 // list employees by manager
@@ -63,14 +60,12 @@ const byManager = (info) => {
     LEFT JOIN employees m ON m.id = e.manager_id
     WHERE m.first_name = ?`
 
-    db.query(sql, manager, (err, rows) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
+    return db.query(sql, manager)
+    .then(results => {
+        [rows] = results;
         console.table(rows);
-        return;
-    });
+    })
+    .catch(console.log);
 };
 
 // add an employee
@@ -81,12 +76,12 @@ const addEmployee = (info) => {
     // find the new role_id
     const roles = ['Front-end Developer', 'Back-end Developer', 'Lead Engineer', 'UX Designer', 'Graphic Designer', 'Creative Director', 'Marketing Coordinator', 'Marketing Analyst', 'Marketing Director',
     'Accountant', 'Finanial Analyst', 'Finance Manager '];
-    const findRole = (element) => element === info.newRole;
+    const findRole = (element) => element === info.role;
     const role_id = roles.findIndex(findRole) + 1;
 
     // find the manager_id
     const managers = ['Ali', 'Samantha', 'Dave', 'Tessa', 'None'];
-    const findManager = (element) => element === info.newManager;
+    const findManager = (element) => element === info.manager;
     const manager_id = managers.findIndex(findManager) + 1;
     if (manager_id === 5) {
         manager_id = null;
@@ -97,13 +92,9 @@ const addEmployee = (info) => {
     const params = [first_name, last_name, role_id, manager_id];
     console.log(params);
 
-    db.query(sql, params, (err, rows) => {
-        if (err) {
-            console.log(err);
-        }
-        console.log('Employee Added!');
-        return;
-    });
+    return db.query(sql, params)
+    .then(console.log('Employee Added!'))
+    .catch(console.log);
 };
 
 // update an employee's role
@@ -122,14 +113,9 @@ const updateRole = (info) => {
     const params = [role_id, id];
     const sql = `UPDATE employees SET role_id = ? WHERE id = ?`;
 
-    // update employee in the database
-    db.query(sql, params, (err, rows) => {
-        if (err) {
-            console.log(err);
-        }
-        console.log('Employee Role Updated!');
-        return;
-    });
+    return db.query(sql, params)
+    .then(console.log('Employee Updated!'))
+    .catch(console.log);
 };
 
 // update an employee's manager
@@ -150,13 +136,9 @@ const updateManager = (info) => {
     const sql = `UPDATE employees SET manager_id = ? WHERE id = ?`;
     const params = [manager_id, id];
 
-    db.query(sql, params, (err, rows) => {
-        if (err) {
-            console.log(err);
-        }
-        console.log('Employee Manager Updated!');
-        return;
-    });
+    return db.query(sql, params)
+    .then(console.log('Employee Updated!'))
+    .catch(console.log);
 };
 
 const deleteEmployee = (info) => {
@@ -167,13 +149,9 @@ const deleteEmployee = (info) => {
 
     const sql = `DELETE FROM employees WHERE id = ?`;
 
-    db.query(sql, id, (err, rows) => {
-        if (err) {
-            console.log(err);
-        }
-        console.log('Employee Deleted!');
-        return;
-    });
+    return db.query(sql, id)
+    .then(console.log('Employee Deleted!'))
+    .catch(console.log);
 };
 
 

@@ -10,6 +10,6 @@ const db = mysql.createConnection(
         database: 'good_company_db'
     },
     console.log('Connected to Database')
-);
+).promise();
 
 module.exports = db;
