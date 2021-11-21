@@ -1,6 +1,8 @@
 const inquirer = require('inquirer');
 
 const questions = () => {
+
+    // questions for user
     return inquirer.prompt([
         {
             type: 'list',

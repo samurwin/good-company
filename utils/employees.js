@@ -1,6 +1,5 @@
 const db = require('../db/connection');
 const Ctable = require('console.table');
-const { employeeList, departmentList, roleList } = require('./list');
 
 // list all employees
 const viewEmployees = () => {
@@ -144,9 +143,10 @@ const updateManager = (info) => {
 const deleteEmployee = (info) => {
     // find the employee's id
     const employees = ['Ali Maqsood', 'Samantha Urwin', 'Dave Chappelle', 'Tessa Thompson', 'Ryan Reynolds', 'Marshall Mathers', 'Katherine Segal', 'Robyn Fenty', 'Regina King', 'Jimmy Yang', 'Idris Alba', 'Blake Lively'];
-    const findEmployee = (element) => element === info.updateEmployee;
+    const findEmployee = (element) => element === info.delete;
     const id = employees.findIndex(findEmployee) + 1;
 
+    console.log(id);
     const sql = `DELETE FROM employees WHERE id = ?`;
 
     return db.query(sql, id)

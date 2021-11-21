@@ -1,6 +1,7 @@
 const db = require('../db/connection');
 const Ctable = require('console.table');
 
+// view all departments
 const viewDepartments = () => {
     const sql = `SELECT name FROM departments`;
 
@@ -12,6 +13,7 @@ const viewDepartments = () => {
     .catch(console.log);
 };
 
+// add a new department
 const addDepartment = (info) => {
     const newDepartment = info.addDepartment;
     

@@ -1,6 +1,7 @@
 const db = require('../db/connection');
 const Ctable = require('console.table');
 
+// view all roles
 const viewRoles = () => {
     const sql = `SELECT title, salary, departments.name AS department
     FROM roles
@@ -14,6 +15,7 @@ const viewRoles = () => {
     .catch(console.log);
 };
 
+// add a new role
 const addRole = (info) => {
     const role = info.addRole;
     const salary = info.salary;

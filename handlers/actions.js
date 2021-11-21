@@ -3,6 +3,7 @@ const { viewEmployees, byDepartment, byManager, addEmployee, updateRole, updateM
 const { viewDepartments, addDepartment } = require('../utils/departments');
 const { viewRoles, addRole } = require('../utils/roles');
 
+// call the appropriate function based on the action the user would like to take
 module.exports = perform = ({ action, ...info }) => {
     switch (action) {
         case 'View All Employees':
